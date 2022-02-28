@@ -1,0 +1,1 @@
+sudo docker run -d --env-file ./.env --network net --name fyrebrick-updater-v1 ghcr.io/fyrebrick/fyrebrick-updater-v1

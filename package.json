@@ -1,0 +1,30 @@
+{
+  "name": "fyrebrick-updater-v1",
+  "version": "1.0.0",
+  "description": "The updater module for Fyrebrick",
+  "main": "app.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "node-schedule": "^2.1.0",
+    "oauth": "^0.9.15",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fyrebrick/fyrebrick-updater-v1.git"
+  },
+  "author": "Karel De Smet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fyrebrick/fyrebrick-updater-v1/issues"
+  },
+  "homepage": "https://github.com/fyrebrick/fyrebrick-updater-v1#readme"
+}
