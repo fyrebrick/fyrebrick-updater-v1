@@ -6,6 +6,17 @@ Improved bricklink orders and inventory local sync system
 - uses progress bar in terminal
 - container available at [ghcr.io/fyrebrick/fyrebrick-updater-v1](ghcr.io/fyrebrick/fyrebrick-updater-v1)
 
+
+Enviroment variables:
+- `PGHOST`
+- `PGUSER`
+- `PGDATABASE`
+- `PGPASSWORD`
+- `PGPORT`
+- `CRON_CLEANING`
+- `CRON_INVENTORY`
+- `CRON_ORDERS`
+
 Terminal looks like this:
 ```
 Started FYREBRICK UPDATER V1
