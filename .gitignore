@@ -1,0 +1,5 @@
+node_modules/
+.vscode/
+lib/db/sql/userCreate.sql
+.env
+package-lock.json

@@ -5,6 +5,7 @@ const updateInventory = require("./lib/bricklink/updateInventory.js");
 const cleanup = require("./lib/bricklink/cleanup.js");
 const schedule = require("node-schedule");
 const cliProgress = require('cli-progress');
+const {cleanupDaily} = require("./lib/db/utils/updateApiCall");
 
 (async () => {
   const Crud = require("./lib/db/utils/crud");
@@ -27,6 +28,12 @@ const cliProgress = require('cli-progress');
     console.log(key,timing[key]);
   }
   console.log("");
+
+
+  schedule.scheduleJob("0 0 * * *", async () => {
+    // api call cleaning
+    cleanupDaily();
+  });
   
   //UPDATING INVENTORY
   schedule.scheduleJob(timing.inventory, async () => {
@@ -52,7 +59,6 @@ const cliProgress = require('cli-progress');
   });
 
   schedule.scheduleJob(timing.cleaning, async () => {
-    // console.log("cleaning");
     cleanup();
   });
   

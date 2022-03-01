@@ -17,6 +17,8 @@ Enviroment variables:
 - `CRON_INVENTORY`
 - `CRON_ORDERS`
 
+To start in docker-compose, check the `docker-compose.yml` file.
+
 Terminal looks like this:
 ```
 Started FYREBRICK UPDATER V1

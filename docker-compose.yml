@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  updater:
+    image: ghcr.io/fyrebrick/fyrebrick-updater-v1
+    environment:
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=fyrebrick
+      - PGUSER=fyrebrick
+      - PGPASSWORD=fyrebrick
+      - CRON_CLEANING="0 0 * * *"
+      - CRON_INVENTORY="*/30 * * * *"
+      - CRON_ORDERS="*/2 * * * *"
+    networks:
+      - fyrebrick_network
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=fyrebrick
+      - POSTGRES_PASSWORD=fyrebrick
+      - POSTGRES_DB=fyrebrick
+      - POSTGRES_PORT=5432
+    ports:
+      - "5432:5432"
+    networks:
+      - fyrebrick_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+networks:
+  fyrebrick_network:
+    driver: bridge

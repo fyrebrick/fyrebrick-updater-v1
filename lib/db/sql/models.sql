@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS item (
 );
 
 CREATE TABLE IF NOT EXISTS inventory_item (
-    comsumer_key TEXT NULL,
+    consumer_key TEXT NULL,
     color_id SMALLINT NULL,
     color_name TEXT NULL,
     "quantity" NUMERIC NULL,
