@@ -29,7 +29,6 @@ const {cleanupDaily} = require("./lib/db/utils/updateApiCall");
   }
   console.log("");
 
-
   schedule.scheduleJob("0 0 * * *", async () => {
     // api call cleaning
     cleanupDaily();
