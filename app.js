@@ -4,33 +4,40 @@ const updateOrders = require("./lib/bricklink/updateOrders.js");
 const updateInventory = require("./lib/bricklink/updateInventory.js");
 const cleanup = require("./lib/bricklink/cleanup.js");
 const schedule = require("node-schedule");
-const cliProgress = require('cli-progress');
 const {cleanupDaily} = require("./lib/db/utils/updateApiCall");
+const fs = require('fs');
+const path = require('path');
 
 (async () => {
   const Crud = require("./lib/db/utils/crud");
-  console.log("Started FYREBRICK UPDATER V1");
   let users = (await Crud.select("user"));
   let currentlyUpdatingUsersInventoryItems = [];
   let currentlyUpdatingUsersOrders = [];
-  let multiBar = new cliProgress.MultiBar({
-    clearOnComplete: false,
-    hideCursor: true,
-    format: ' {bar} {percentage}% | ETA: {eta}s | {value}/{total} | {description}'
-  }, cliProgress.Presets.shades_grey);
   let timing = {
     orders:process.env.CRON_ORDERS || "*/2 * * * *",
     inventory:process.env.CRON_INVENTORY || "*/10 * * * *",
     cleaning:process.env.CRON_CLEANING || "0 0 * * *"
   }
+  console.clear();
+  const logo = fs.readFileSync(path.resolve('./logo.txt')).toString();
+  const widthOfLogo = logo.split("\n").map(line => line.length).reduce((a,b) => a>b?a:b);
+  const widthOfConsole = process.stdout.columns;
+  if((widthOfLogo+2) <= widthOfConsole){
+    const sidePadding = Math.floor((widthOfConsole - widthOfLogo)/2);
+    const paddedLogo = logo.split("\n").map(line => " ".repeat(sidePadding) + line).join("\n");
+    console.log(paddedLogo);
+  }else{
+    console.log("FYREBRICK UPDATER v1\n");
+  }
+  
+  console.log("=".repeat(widthOfConsole)+"\n");
   console.log("Cron schedules set:");
   for (let key in timing) {
-    console.log(key,timing[key]);
+    console.log("‣",key,timing[key]);
   }
-  console.log("");
-
+  console.log("\n");
+  cleanup();
   schedule.scheduleJob("0 0 * * *", async () => {
-    // api call cleaning
     cleanupDaily();
   });
   
@@ -39,8 +46,7 @@ const {cleanupDaily} = require("./lib/db/utils/updateApiCall");
     for(let user of users){
       if(!currentlyUpdatingUsersInventoryItems.includes(user.consumer_key)){
         currentlyUpdatingUsersInventoryItems.push(user.consumer_key);
-        // console.log("updating inventory for user "+user.username);
-        await updateInventory(user.fyrebrick_id,multiBar,user);
+        await updateInventory(user.fyrebrick_id,user);
         currentlyUpdatingUsersInventoryItems = currentlyUpdatingUsersInventoryItems.filter(u => u !== user.consumer_key); //remove current user from the list
       }
     }
@@ -51,7 +57,7 @@ const {cleanupDaily} = require("./lib/db/utils/updateApiCall");
     for(let user of users){
       if(!currentlyUpdatingUsersOrders.includes(user.consumer_key)){
         currentlyUpdatingUsersOrders.push(user.consumer_key);
-        await updateOrders(user.fyrebrick_id,multiBar,user);
+        await updateOrders(user.fyrebrick_id,user)
         currentlyUpdatingUsersOrders = currentlyUpdatingUsersOrders.filter(u => u !== user.consumer_key); 
       }
   }
@@ -60,7 +66,5 @@ const {cleanupDaily} = require("./lib/db/utils/updateApiCall");
   schedule.scheduleJob(timing.cleaning, async () => {
     cleanup();
   });
-  
-
 
 })();
